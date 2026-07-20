@@ -2,6 +2,7 @@
 .next/
 build/
 out/
+coverage/
 
 # Dependencias
 node_modules/
