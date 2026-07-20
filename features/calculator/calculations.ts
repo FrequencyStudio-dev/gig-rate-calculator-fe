@@ -5,4 +5,4 @@
  * Se implementa en la Fase 1 (Día 3).
  */
 
-export {};
+export {}

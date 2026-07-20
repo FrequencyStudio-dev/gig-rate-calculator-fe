@@ -1,0 +1,19 @@
+# Salidas de build
+.next/
+build/
+out/
+
+# Dependencias
+node_modules/
+yarn.lock
+
+# Generados
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# Gestionado por Next (bloque BEGIN/END:nextjs-agent-rules).
+# Next lo reescribe; formatearlo solo genera ruido en el diff.
+AGENTS.md
+
+# Assets estáticos
+public/
