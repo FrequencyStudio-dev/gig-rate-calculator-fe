@@ -3,7 +3,6 @@
 export type ExpenseCategory =
   "transport" | "equipment" | "production" | "staff" | "other"
 
-
 export type GoalType = "total" | "perMember"
 
 /** Datos del show. Entidad raíz del cálculo. */
@@ -34,7 +33,7 @@ export interface Result {
   profitPerMember: number
 }
 
-/* Estado del presupuesto: fuente única de la verdad que consume el hook. */
+/* Estado del presupuesto: fuente única de la verdad que consume el hook.  Ver calculations.ts (25)*/
 export interface BudgetState {
   show: Show
   expenses: Expense[]
