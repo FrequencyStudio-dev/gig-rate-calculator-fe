@@ -14,7 +14,7 @@ describe("validateMembers", () => {
   })
 
   it("rechaza 0, negativos, decimales y NaN", () => {
-    const message = "Debe existir algún integrante"
+    const message = "Debe haber al menos un integrante."
     expect(validateMembers(0)).toBe(message)
     expect(validateMembers(-1)).toBe(message)
     expect(validateMembers(1.5)).toBe(message)

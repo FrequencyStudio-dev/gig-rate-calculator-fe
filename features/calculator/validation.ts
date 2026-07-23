@@ -1,4 +1,4 @@
-const MEMBERS_MESSAGE = "Debe existir algún integrante"
+const MEMBERS_MESSAGE = "Debe haber al menos un integrante."
 const AMOUNT_MESSAGE = "El importe debe ser mayor a 0."
 const DESCRIPTION_MESSAGE = "El concepto es obligatorio."
 const GOAL_VALUE_MESSAGE = "El objetivo debe ser mayor que 0."
