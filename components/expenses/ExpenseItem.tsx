@@ -38,7 +38,7 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
     : null
 
   return (
-    <div className="grid gap-3 rounded-lg border border-border/70 bg-background p-3">
+    <div className="grid gap-3 rounded-lg border border-border/70 bg-background p-3 transition-colors hover:border-border">
       <div className="grid gap-2">
         <Label htmlFor={descriptionId}>Concepto</Label>
         <Input
@@ -59,7 +59,7 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
           <p
             id={`${descriptionId}-error`}
             role="alert"
-            className="text-sm text-destructive"
+            className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
           >
             {descriptionError}
           </p>
@@ -104,7 +104,7 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
               }
               className="text-right font-mono tabular-nums sm:w-36"
             />
-            
+
             <Button
               type="button"
               variant="ghost"
@@ -121,7 +121,7 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
             <p
               id={`${amountId}-error`}
               role="alert"
-              className="text-sm text-destructive"
+              className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
             >
               {amountError}
             </p>

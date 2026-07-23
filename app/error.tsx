@@ -23,7 +23,7 @@ export default function Error({
   }, [error])
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div className="max-w-2xl">
       <Card>
         <CardHeader>
           <CardTitle asChild>

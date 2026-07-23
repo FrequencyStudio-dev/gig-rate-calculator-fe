@@ -20,8 +20,9 @@ export function ShowInfo({ show, onChange }: ShowInfoProps) {
   const membersError = membersTouched ? validateMembers(show.members) : null
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-2">
+    /* Integrantes y Nombre comparten fila en cuanto hay ancho; Tipo va entero. */
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid content-start gap-2">
         <Label htmlFor={membersId}>Integrantes</Label>
         <Input
           id={membersId}
@@ -43,14 +44,14 @@ export function ShowInfo({ show, onChange }: ShowInfoProps) {
           <p
             id={`${membersId}-error`}
             role="alert"
-            className="text-sm text-destructive"
+            className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
           >
             {membersError}
           </p>
         ) : null}
       </div>
 
-      <div className="grid gap-2">
+      <div className="grid content-start gap-2">
         <Label htmlFor={eventNameId}>Nombre del evento</Label>
         <Input
           id={eventNameId}
@@ -61,7 +62,7 @@ export function ShowInfo({ show, onChange }: ShowInfoProps) {
         />
       </div>
 
-      <div className="grid gap-2">
+      <div className="grid gap-2 sm:col-span-2">
         <Label htmlFor={eventTypeId}>Tipo de evento</Label>
         <Input
           id={eventTypeId}

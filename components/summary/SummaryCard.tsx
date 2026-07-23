@@ -5,19 +5,21 @@ import { formatCurrency } from "@/lib/currency"
 
 export interface SummaryCardProps {
   result: Result
-  /* Hay algún dato inválido: el precio se muestra igual, pero con reservas. */
   isIncomplete: boolean
 }
 
 export function SummaryCard({ result, isIncomplete }: SummaryCardProps) {
   return (
-    <div className="flex flex-col gap-4">
-      <dl className="grid gap-4 sm:grid-cols-3">
-        <div className="flex flex-col gap-1 sm:col-span-3">
+    <div className="@container flex flex-col gap-4">
+      <dl className="grid gap-4 @md:grid-cols-3">
+        <div className="flex flex-col gap-1 @md:col-span-3">
           <dt className="text-sm font-medium text-muted-foreground">
             Precio recomendado
           </dt>
-          <dd className="font-mono text-4xl font-semibold tracking-tight text-primary tabular-nums">
+          <dd
+            aria-live="polite"
+            className="font-mono text-3xl font-semibold tracking-tight text-primary tabular-nums @md:text-4xl"
+          >
             {formatCurrency(result.recommendedPrice)}
           </dd>
         </div>

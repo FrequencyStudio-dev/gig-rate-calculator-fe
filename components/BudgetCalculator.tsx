@@ -48,63 +48,65 @@ export function BudgetCalculator() {
   const result = buildCalculationResult(state)
 
   return (
-    <>
-      <section aria-label="Datos del show">
-        <Card>
-          <CardHeader>
-            <CardTitle asChild>
-              <h2>Datos del show</h2>
-            </CardTitle>
-            <CardDescription>
-              Cuántos son y qué van a tocar. Los integrantes reparten la
-              ganancia.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ShowInfo show={state.show} onChange={setShowInfo} />
-          </CardContent>
-        </Card>
-      </section>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-8">
+      <div className="flex flex-col gap-6">
+        <section aria-label="Datos del show">
+          <Card>
+            <CardHeader>
+              <CardTitle asChild>
+                <h2>Datos del show</h2>
+              </CardTitle>
+              <CardDescription>
+                Cuántos son y qué van a tocar. Los integrantes reparten la
+                ganancia.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ShowInfo show={state.show} onChange={setShowInfo} />
+            </CardContent>
+          </Card>
+        </section>
 
-      <section aria-label="Gastos">
-        <Card>
-          <CardHeader>
-            <CardTitle asChild>
-              <h2>Gastos</h2>
-            </CardTitle>
-            <CardDescription>
-              Todo lo que hay que pagar para que el show pase.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ExpenseManager
-              expenses={state.expenses}
-              onAdd={addExpense}
-              onUpdate={updateExpense}
-              onRemove={removeExpense}
-            />
-          </CardContent>
-        </Card>
-      </section>
+        <section aria-label="Gastos">
+          <Card>
+            <CardHeader>
+              <CardTitle asChild>
+                <h2>Gastos</h2>
+              </CardTitle>
+              <CardDescription>
+                Todo lo que hay que pagar para que el show pase.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ExpenseManager
+                expenses={state.expenses}
+                onAdd={addExpense}
+                onUpdate={updateExpense}
+                onRemove={removeExpense}
+              />
+            </CardContent>
+          </Card>
+        </section>
 
-      <section aria-label="Objetivo económico">
-        <Card>
-          <CardHeader>
-            <CardTitle asChild>
-              <h2>Objetivo económico</h2>
-            </CardTitle>
-            <CardDescription>
-              Cuánto querés que le quede a la banda después de cubrir los
-              gastos.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <GoalSelector goal={state.goal} onChange={setGoal} />
-          </CardContent>
-        </Card>
-      </section>
+        <section aria-label="Objetivo económico">
+          <Card>
+            <CardHeader>
+              <CardTitle asChild>
+                <h2>Objetivo económico</h2>
+              </CardTitle>
+              <CardDescription>
+                Cuánto querés que le quede a la banda después de cubrir los
+                gastos.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GoalSelector goal={state.goal} onChange={setGoal} />
+            </CardContent>
+          </Card>
+        </section>
+      </div>
 
-      <section aria-label="Resumen">
+      <section aria-label="Resumen" className="lg:sticky lg:top-24">
         <Card className="bg-primary/5 ring-primary/20">
           <CardHeader>
             <CardTitle asChild>
@@ -122,6 +124,6 @@ export function BudgetCalculator() {
           </CardContent>
         </Card>
       </section>
-    </>
+    </div>
   )
 }

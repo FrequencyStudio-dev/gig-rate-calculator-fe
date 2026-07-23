@@ -52,7 +52,10 @@ export function ExpenseManager({
         <>
           <ul className="flex flex-col gap-3">
             {expenses.map((expense) => (
-              <li key={expense.id}>
+              <li
+                key={expense.id}
+                className="animate-in duration-200 fade-in slide-in-from-top-2"
+              >
                 <ExpenseItem
                   expense={expense}
                   onUpdate={onUpdate}
