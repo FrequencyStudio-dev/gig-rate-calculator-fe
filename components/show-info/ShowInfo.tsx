@@ -1,6 +1,11 @@
 "use client"
 
+import { useId, useState } from "react"
+
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import type { Show } from "@/features/calculator/types"
+import { validateMembers } from "@/features/calculator/validation"
 
 export interface ShowInfoProps {
   show: Show
@@ -8,39 +13,65 @@ export interface ShowInfoProps {
 }
 
 export function ShowInfo({ show, onChange }: ShowInfoProps) {
+  const membersId = useId()
+  const eventNameId = useId()
+  const eventTypeId = useId()
+  const [membersTouched, setMembersTouched] = useState(false)
+  const membersError = membersTouched ? validateMembers(show.members) : null
+
   return (
-    <div className="flex flex-col gap-4">
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Integrantes</span>
-        <input
+    /* Integrantes y Nombre comparten fila en cuanto hay ancho; Tipo va entero. */
+    <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid content-start gap-2">
+        <Label htmlFor={membersId}>Integrantes</Label>
+        <Input
+          id={membersId}
           type="number"
+          inputMode="numeric"
           min={1}
           step={1}
           value={show.members}
-          onChange={(e) => onChange({ members: Number(e.target.value) })}
-          className="rounded border px-2 py-1"
+          aria-invalid={Boolean(membersError)}
+          aria-describedby={membersError ? `${membersId}-error` : undefined}
+          onBlur={() => setMembersTouched(true)}
+          onChange={(e) => {
+            setMembersTouched(true)
+            onChange({ members: Number(e.target.value) })
+          }}
+          className="font-mono tabular-nums"
         />
-      </label>
+        {membersError ? (
+          <p
+            id={`${membersId}-error`}
+            role="alert"
+            className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
+          >
+            {membersError}
+          </p>
+        ) : null}
+      </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Nombre del evento</span>
-        <input
+      <div className="grid content-start gap-2">
+        <Label htmlFor={eventNameId}>Nombre del evento</Label>
+        <Input
+          id={eventNameId}
           type="text"
           value={show.eventName}
+          placeholder="Show en La Trastienda"
           onChange={(e) => onChange({ eventName: e.target.value })}
-          className="rounded border px-2 py-1"
         />
-      </label>
+      </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Tipo de evento</span>
-        <input
+      <div className="grid gap-2 sm:col-span-2">
+        <Label htmlFor={eventTypeId}>Tipo de evento</Label>
+        <Input
+          id={eventTypeId}
           type="text"
           value={show.eventType}
+          placeholder="Concierto, festival, casamiento…"
           onChange={(e) => onChange({ eventType: e.target.value })}
-          className="rounded border px-2 py-1"
         />
-      </label>
+      </div>
     </div>
   )
 }

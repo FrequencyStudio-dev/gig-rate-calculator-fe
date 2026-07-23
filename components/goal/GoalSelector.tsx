@@ -1,6 +1,12 @@
 "use client"
 
-import type { Goal } from "@/features/calculator/types"
+import { useId, useState } from "react"
+
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import type { Goal, GoalType } from "@/features/calculator/types"
+import { validateGoalValue } from "@/features/calculator/validation"
 
 export interface GoalSelectorProps {
   goal: Goal
@@ -8,43 +14,77 @@ export interface GoalSelectorProps {
 }
 
 export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
+  const modeLabelId = useId()
+  const modeHelpId = useId()
+  const totalId = useId()
+  const perMemberId = useId()
+  const valueId = useId()
+
+  const [valueTouched, setValueTouched] = useState(false)
+  const valueError = valueTouched ? validateGoalValue(goal.value) : null
+
   return (
     <div className="flex flex-col gap-4">
-      <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-medium">Modo de ganancia</legend>
+      <div className="grid gap-2">
+        <span id={modeLabelId} className="text-sm font-medium">
+          Modo de ganancia
+        </span>
 
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="goalType"
-            checked={goal.type === "total"}
-            onChange={() => onChange({ type: "total" })}
-          />
-          <span className="text-sm">Total</span>
-        </label>
+        <RadioGroup
+          value={goal.type}
+          onValueChange={(value) => onChange({ type: value as GoalType })}
+          aria-labelledby={modeLabelId}
+          aria-describedby={modeHelpId}
+          className="grid-cols-2"
+        >
+          <Label
+            htmlFor={totalId}
+            className="cursor-pointer rounded-lg border border-input p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent md:p-3"
+          >
+            <RadioGroupItem id={totalId} value="total" />
+            Total
+          </Label>
 
-        <label className="flex items-center gap-2">
-          <input
-            type="radio"
-            name="goalType"
-            checked={goal.type === "perMember"}
-            onChange={() => onChange({ type: "perMember" })}
-          />
-          <span className="text-sm">Por integrante</span>
-        </label>
-      </fieldset>
+          <Label
+            htmlFor={perMemberId}
+            className="cursor-pointer rounded-lg border border-input p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent md:p-3"
+          >
+            <RadioGroupItem id={perMemberId} value="perMember" />
+            Por integrante
+          </Label>
+        </RadioGroup>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Ganancia deseada</span>
-        <input
+        <p id={modeHelpId} className="text-sm text-muted-foreground">
+          Elegí si la ganancia deseada es para toda la banda o para cada
+          integrante.
+        </p>
+      </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor={valueId}>Ganancia deseada</Label>
+        <Input
+          id={valueId}
           type="number"
+          inputMode="decimal"
           min={0}
           step="0.01"
           value={goal.value}
+          aria-invalid={Boolean(valueError)}
+          aria-describedby={valueError ? `${valueId}-error` : undefined}
+          onBlur={() => setValueTouched(true)}
           onChange={(e) => onChange({ value: Number(e.target.value) })}
-          className="rounded border px-2 py-1"
+          className="font-mono tabular-nums"
         />
-      </label>
+        {valueError ? (
+          <p
+            id={`${valueId}-error`}
+            role="alert"
+            className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
+          >
+            {valueError}
+          </p>
+        ) : null}
+      </div>
     </div>
   )
 }
