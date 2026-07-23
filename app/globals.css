@@ -48,22 +48,10 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/*
- * Escala de espaciado. Es el default de Tailwind v4 y de acá derivan todas las
- * utilidades de gap, padding y margin. Se declara explícito para que sea una
- * decisión del design system y no un default heredado: cambiar este número
- * reescala la app entera.
- */
 @theme {
   --spacing: 0.25rem;
 }
 
-/*
- * Identidad visual de Frequency Studio.
- * Acento: violeta eléctrico (hue 295). Los neutros no son grises puros: llevan
- * un croma bajo en el mismo hue (285) para que la interfaz se lea como una
- * marca y no como un wireframe.
- */
 :root {
   --background: oklch(0.99 0.005 285);
   --foreground: oklch(0.16 0.02 285);
@@ -99,11 +87,6 @@
   --sidebar-ring: oklch(0.55 0.22 295);
 }
 
-/*
- * Paleta oscura. Hoy nadie pone la clase `dark` (no hay selector de tema), pero
- * se mantiene coherente para que agregarlo sea gratis. El acento sube de
- * luminosidad: el violeta de la paleta clara no contrasta sobre fondo oscuro.
- */
 .dark {
   --background: oklch(0.16 0.02 285);
   --foreground: oklch(0.97 0.005 285);

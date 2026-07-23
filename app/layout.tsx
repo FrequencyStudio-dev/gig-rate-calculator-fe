@@ -2,11 +2,6 @@ import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 
-/*
- * El nombre de `variable` es el que consume el tema: `@theme inline` mapea
- * --font-sans / --font-mono en app/globals.css. Si no coinciden, la utilidad
- * font-sans resuelve a nada y la app cae en la tipografía del sistema.
- */
 const geistSans = Geist({
   variable: "--font-sans",
   subsets: ["latin"],

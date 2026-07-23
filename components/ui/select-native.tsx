@@ -3,10 +3,6 @@ import { ChevronDownIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-/*
- * <select> nativo con el aspecto del Input de Shadcn. Se elige el nativo sobre
- * el Select de Radix por la UX en mobile: abre el picker del sistema operativo.
- */
 function SelectNative({
   className,
   children,
