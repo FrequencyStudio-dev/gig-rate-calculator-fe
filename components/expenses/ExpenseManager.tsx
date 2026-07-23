@@ -1,6 +1,9 @@
 "use client"
 
+import { PlusIcon } from "lucide-react"
+
 import { ExpenseItem } from "@/components/expenses/ExpenseItem"
+import { Button } from "@/components/ui/button"
 import { calculateTotalCosts } from "@/features/calculator/calculations"
 import { DEFAULT_EXPENSE_CATEGORY } from "@/features/calculator/constants"
 import type { Expense } from "@/features/calculator/types"
@@ -37,7 +40,7 @@ export function ExpenseManager({
         </ul>
       )}
 
-      <button
+      <Button
         type="button"
         onClick={() =>
           onAdd({
@@ -46,10 +49,11 @@ export function ExpenseManager({
             amount: 0,
           })
         }
-        className="self-start rounded border px-3 py-1 text-sm"
+        className="self-start"
       >
+        <PlusIcon />
         Agregar gasto
-      </button>
+      </Button>
 
       <p className="text-sm font-medium">
         Costo total: {formatCurrency(calculateTotalCosts(expenses))}

@@ -1,5 +1,8 @@
 "use client"
 
+import { Trash2Icon } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
 import { EXPENSE_CATEGORIES } from "@/features/calculator/constants"
 import type { Expense, ExpenseCategory } from "@/features/calculator/types"
 
@@ -57,13 +60,14 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
         />
       </label>
 
-      <button
+      <Button
         type="button"
+        variant="ghost"
         onClick={() => onRemove(expense.id)}
-        className="rounded border px-3 py-1 text-sm"
       >
+        <Trash2Icon />
         Eliminar
-      </button>
+      </Button>
     </div>
   )
 }
