@@ -51,7 +51,7 @@ export function SummaryCard({ result, isIncomplete }: SummaryCardProps) {
       {isIncomplete ? (
         <p
           role="status"
-          className="flex items-start gap-2 rounded-lg bg-muted px-3 py-2 text-sm text-muted-foreground"
+          className="flex items-start gap-2 rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-700 dark:border-amber-500/25 dark:bg-amber-500/10 dark:text-amber-400"
         >
           <TriangleAlertIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
           Faltan datos por completar: el precio se recalcula igual, pero todavía

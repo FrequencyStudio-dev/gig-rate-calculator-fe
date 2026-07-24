@@ -43,7 +43,7 @@ export function ExpenseManager({
               Sumá el primero para saber cuánto te cuesta tocar.
             </p>
           </div>
-          <Button type="button" variant="outline" onClick={addExpense}>
+          <Button type="button" onClick={addExpense}>
             <PlusIcon />
             Agregar gasto
           </Button>
@@ -65,12 +65,7 @@ export function ExpenseManager({
             ))}
           </ul>
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addExpense}
-            className="self-start"
-          >
+          <Button type="button" onClick={addExpense} className="self-start">
             <PlusIcon />
             Agregar gasto
           </Button>
