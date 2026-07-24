@@ -6,7 +6,6 @@ import { describe, expect, it } from "vitest"
 import { BudgetCalculator } from "@/components/BudgetCalculator"
 import { formatCurrency } from "@/lib/currency"
 
-/* Lee un valor del resumen por su etiqueta (el <dd> hermano de su <dt>). */
 function summaryValue(label: string): string {
   const summary = screen.getByRole("region", { name: "Resumen" })
   const term = within(summary).getByText(label)
@@ -130,5 +129,77 @@ describe("BudgetCalculator", () => {
 
     expect(summaryValue("Ganancia objetivo")).toBe(formatCurrency(1600))
     expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(400))
+  })
+})
+
+describe("BudgetCalculator · validación", () => {
+  it("marca error y aria-invalid al dejar Integrantes en un valor inválido", async () => {
+    const user = userEvent.setup()
+    render(<BudgetCalculator />)
+
+    await fillNumber(user, screen.getByLabelText("Integrantes"), "0")
+
+    const show = within(screen.getByRole("region", { name: "Datos del show" }))
+    expect(show.getByRole("alert")).toHaveTextContent(
+      "Debe haber al menos un integrante.",
+    )
+    expect(screen.getByLabelText("Integrantes")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    )
+  })
+
+  it("muestra los errores de un gasto vacío al salir de cada campo", async () => {
+    const user = userEvent.setup()
+    render(<BudgetCalculator />)
+
+    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
+
+    /* Los errores del gasto salen onBlur, no onChange: hay que enfocar y salir. */
+    const concepto = expenseItem(0).getByLabelText("Concepto")
+    await user.click(concepto)
+    await user.tab()
+
+    const importe = expenseItem(0).getByLabelText("Importe")
+    await user.click(importe)
+    await user.tab()
+
+    const item = expenseItem(0)
+    expect(item.getByText("El concepto es obligatorio.")).toBeInTheDocument()
+    expect(item.getByText("El importe debe ser mayor a 0.")).toBeInTheDocument()
+    expect(concepto).toHaveAttribute("aria-invalid", "true")
+  })
+
+  it("marca error al salir de Ganancia deseada sin un valor válido", async () => {
+    const user = userEvent.setup()
+    render(<BudgetCalculator />)
+
+    const objetivo = within(
+      screen.getByRole("region", { name: "Objetivo económico" }),
+    )
+    const value = screen.getByLabelText("Ganancia deseada")
+    await user.click(value)
+    await user.tab()
+
+    expect(objetivo.getByRole("alert")).toHaveTextContent(
+      "El objetivo debe ser mayor que 0.",
+    )
+    expect(value).toHaveAttribute("aria-invalid", "true")
+  })
+
+  it("el aviso de datos incompletos aparece, se va al completar y vuelve con un gasto vacío", async () => {
+    const user = userEvent.setup()
+    render(<BudgetCalculator />)
+
+    /* Arranca incompleto: el objetivo por defecto es 0. */
+    expect(screen.getByRole("status")).toBeInTheDocument()
+
+    /* Con 1 integrante (default) y objetivo válido, y sin gastos, se completa. */
+    await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "100")
+    expect(screen.queryByRole("status")).toBeNull()
+
+    /* Un gasto nuevo nace vacío (concepto "" e importe 0): vuelve a faltar dato. */
+    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
+    expect(screen.getByRole("status")).toBeInTheDocument()
   })
 })
