@@ -39,7 +39,7 @@ export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
         >
           <Label
             htmlFor={totalId}
-            className="cursor-pointer rounded-lg border border-input p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent md:p-3"
+            className="cursor-pointer rounded-lg border border-input bg-secondary p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent has-aria-checked:font-medium has-aria-checked:text-accent-foreground md:p-3"
           >
             <RadioGroupItem id={totalId} value="total" />
             Total
@@ -47,7 +47,7 @@ export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
 
           <Label
             htmlFor={perMemberId}
-            className="cursor-pointer rounded-lg border border-input p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent md:p-3"
+            className="cursor-pointer rounded-lg border border-input bg-secondary p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent has-aria-checked:font-medium has-aria-checked:text-accent-foreground md:p-3"
           >
             <RadioGroupItem id={perMemberId} value="perMember" />
             Por integrante
