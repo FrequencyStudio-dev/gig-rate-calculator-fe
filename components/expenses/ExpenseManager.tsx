@@ -1,11 +1,8 @@
 "use client"
 
-import { PlusIcon, ReceiptTextIcon } from "lucide-react"
-
-import { ExpenseItem } from "@/components/expenses/ExpenseItem"
-import { Button } from "@/components/ui/button"
+import { ExpenseForm } from "@/components/expenses/ExpenseForm"
+import { ExpenseRow } from "@/components/expenses/ExpenseRow"
 import { calculateTotalCosts } from "@/features/calculator/calculations"
-import { DEFAULT_EXPENSE_CATEGORY } from "@/features/calculator/constants"
 import type { Expense } from "@/features/calculator/types"
 import { formatCurrency } from "@/lib/currency"
 
@@ -22,54 +19,29 @@ export function ExpenseManager({
   onUpdate,
   onRemove,
 }: ExpenseManagerProps) {
-  const addExpense = () =>
-    onAdd({
-      description: "",
-      category: DEFAULT_EXPENSE_CATEGORY,
-      amount: 0,
-    })
-
   return (
     <div className="flex flex-col gap-4">
-      {expenses.length === 0 ? (
-        <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-border py-8 text-center">
-          <ReceiptTextIcon
-            aria-hidden
-            className="size-6 text-muted-foreground"
-          />
-          <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium">Sin gastos todavía.</p>
-            <p className="text-sm text-muted-foreground">
-              Sumá el primero para saber cuánto te cuesta tocar.
-            </p>
-          </div>
-          <Button type="button" onClick={addExpense}>
-            <PlusIcon />
-            Agregar gasto
-          </Button>
-        </div>
-      ) : (
-        <>
-          <ul className="flex flex-col gap-3">
-            {expenses.map((expense) => (
-              <li
-                key={expense.id}
-                className="animate-in duration-200 fade-in slide-in-from-top-2"
-              >
-                <ExpenseItem
-                  expense={expense}
-                  onUpdate={onUpdate}
-                  onRemove={onRemove}
-                />
-              </li>
-            ))}
-          </ul>
+      <ExpenseForm onAdd={onAdd} />
 
-          <Button type="button" onClick={addExpense} className="self-start">
-            <PlusIcon />
-            Agregar gasto
-          </Button>
-        </>
+      {expenses.length > 0 ? (
+        <ul className="flex flex-col gap-2">
+          {expenses.map((expense) => (
+            <li
+              key={expense.id}
+              className="animate-in duration-200 fade-in slide-in-from-top-2"
+            >
+              <ExpenseRow
+                expense={expense}
+                onUpdate={onUpdate}
+                onRemove={onRemove}
+              />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="text-center text-sm text-muted-foreground">
+          Los gastos agregados aparecerán aquí.
+        </p>
       )}
 
       <p className="border-t border-border pt-3 text-right text-sm font-medium">
