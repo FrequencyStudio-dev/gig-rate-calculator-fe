@@ -40,6 +40,26 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
   return (
     <div className="grid gap-3 rounded-lg border border-border/70 bg-background p-3 transition-colors hover:border-border">
       <div className="grid gap-2">
+          <Label htmlFor={categoryId}>Categoría</Label>
+          <SelectNative
+            id={categoryId}
+            value={expense.category}
+            onChange={(e) =>
+              onUpdate(expense.id, {
+                category: e.target.value as ExpenseCategory,
+              })
+            }
+          >
+            {EXPENSE_CATEGORIES.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </SelectNative>
+        </div>
+
+      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+        <div className="grid gap-2">
         <Label htmlFor={descriptionId}>Concepto</Label>
         <Input
           id={descriptionId}
@@ -66,25 +86,6 @@ export function ExpenseItem({ expense, onUpdate, onRemove }: ExpenseItemProps) {
         ) : null}
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-        <div className="grid gap-2">
-          <Label htmlFor={categoryId}>Categoría</Label>
-          <SelectNative
-            id={categoryId}
-            value={expense.category}
-            onChange={(e) =>
-              onUpdate(expense.id, {
-                category: e.target.value as ExpenseCategory,
-              })
-            }
-          >
-            {EXPENSE_CATEGORIES.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </SelectNative>
-        </div>
 
         <div className="grid gap-2">
           <Label htmlFor={amountId}>Importe</Label>
