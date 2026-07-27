@@ -20,8 +20,15 @@ export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
   const perMemberId = useId()
   const valueId = useId()
 
+  const [inputValue, setInputValue] = useState(
+    goal.value === 0 ? "" : String(goal.value)
+  )
+
   const [valueTouched, setValueTouched] = useState(false)
-  const valueError = valueTouched ? validateGoalValue(goal.value) : null
+
+  const valueError = valueTouched
+    ? validateGoalValue(Number(inputValue))
+    : null
 
   return (
     <div className="flex flex-col gap-4">
@@ -62,19 +69,26 @@ export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
 
       <div className="grid gap-2">
         <Label htmlFor={valueId}>Ganancia deseada</Label>
+
         <Input
           id={valueId}
           type="number"
           inputMode="decimal"
           min={0}
           step="0.01"
-          value={goal.value}
+          value={inputValue}
           aria-invalid={Boolean(valueError)}
           aria-describedby={valueError ? `${valueId}-error` : undefined}
-          onBlur={() => setValueTouched(true)}
-          onChange={(e) => onChange({ value: Number(e.target.value) })}
+          onBlur={() => {
+            setValueTouched(true)
+            onChange({ value: Number(inputValue) })
+          }}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+          }}
           className="font-mono tabular-nums"
         />
+
         {valueError ? (
           <p
             id={`${valueId}-error`}

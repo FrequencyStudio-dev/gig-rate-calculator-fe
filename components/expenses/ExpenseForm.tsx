@@ -16,6 +16,11 @@ import {
   validateExpenseDescription,
 } from "@/features/calculator/validation"
 
+type ExpenseFormState = {
+  category: ExpenseCategory
+  description: string
+  amount: string
+}
 export interface ExpenseFormProps {
   onAdd: (expense: Omit<Expense, "id">) => void
 }
@@ -23,7 +28,7 @@ export interface ExpenseFormProps {
 const INITIAL_FORM = {
   category: DEFAULT_EXPENSE_CATEGORY,
   description: "",
-  amount: 0,
+  amount: "",
 }
 
 export function ExpenseForm({ onAdd }: ExpenseFormProps) {
@@ -31,7 +36,7 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
   const categoryId = useId()
   const amountId = useId()
 
-  const [form, setForm] = useState(INITIAL_FORM)
+  const [form, setForm] = useState <ExpenseFormState>(INITIAL_FORM)
 
   const [touched, setTouched] = useState({
     description: false,
@@ -43,13 +48,13 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
     : null
 
   const amountError = touched.amount
-    ? validateExpenseAmount(form.amount)
+    ? validateExpenseAmount(Number(form.amount))
     : null
 
   const handleAdd = () => {
     const hasErrors =
       validateExpenseDescription(form.description) ||
-      validateExpenseAmount(form.amount)
+      validateExpenseAmount(Number(form.amount))
 
     if (hasErrors) {
       setTouched({
@@ -59,7 +64,11 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
       return
     }
 
-    onAdd(form)
+    onAdd({
+      category: form.category,
+      description: form.category,
+      amount: Number(form.amount),
+    })
 
     setForm(INITIAL_FORM)
 
@@ -153,7 +162,7 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
             onChange={(e) =>
               setForm((prev) => ({
                 ...prev,
-                amount: Number(e.target.value),
+                amount: e.target.value,
               }))
             }
             className="text-right font-mono tabular-nums sm:w-36"
