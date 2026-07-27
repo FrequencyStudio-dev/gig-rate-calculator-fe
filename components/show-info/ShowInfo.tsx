@@ -9,47 +9,53 @@ import { validateMembers } from "@/features/calculator/validation"
 
 export interface ShowInfoProps {
   show: Show
+  showMembers: boolean
   onChange: (patch: Partial<Show>) => void
 }
 
-export function ShowInfo({ show, onChange }: ShowInfoProps) {
+export function ShowInfo({
+  show,
+  showMembers,
+  onChange,
+}: ShowInfoProps) {
   const membersId = useId()
   const eventNameId = useId()
   const eventTypeId = useId()
   const [membersTouched, setMembersTouched] = useState(false)
   const membersError = membersTouched ? validateMembers(show.members) : null
-
   return (
     /* Integrantes y Nombre comparten fila en cuanto hay ancho; Tipo va entero. */
     <div className="grid gap-4 sm:grid-cols-2">
-      <div className="grid content-start gap-2">
-        <Label htmlFor={membersId}>Integrantes</Label>
-        <Input
-          id={membersId}
-          type="number"
-          inputMode="numeric"
-          min={1}
-          step={1}
-          value={show.members}
-          aria-invalid={Boolean(membersError)}
-          aria-describedby={membersError ? `${membersId}-error` : undefined}
-          onBlur={() => setMembersTouched(true)}
-          onChange={(e) => {
-            setMembersTouched(true)
-            onChange({ members: Number(e.target.value) })
-          }}
-          className="font-mono tabular-nums"
-        />
-        {membersError ? (
-          <p
-            id={`${membersId}-error`}
-            role="alert"
-            className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
-          >
-            {membersError}
-          </p>
-        ) : null}
-      </div>
+      {showMembers && (
+          <div className="grid content-start gap-2">
+            <Label htmlFor={membersId}>Integrantes</Label>
+            <Input
+              id={membersId}
+              type="number"
+              inputMode="numeric"
+              min={1}
+              step={1}
+              value={show.members}
+              aria-invalid={Boolean(membersError)}
+              aria-describedby={membersError ? `${membersId}-error` : undefined}
+              onBlur={() => setMembersTouched(true)}
+              onChange={(e) => {
+                setMembersTouched(true)
+                onChange({ members: Number(e.target.value) })
+              }}
+              className="font-mono tabular-nums"
+            />
+            {membersError ? (
+              <p
+                id={`${membersId}-error`}
+                role="alert"
+                className="animate-in text-sm text-destructive duration-150 fade-in slide-in-from-top-1"
+              >
+                {membersError}
+              </p>
+            ) : null}
+          </div>
+        )}
 
       <div className="grid content-start gap-2">
         <Label htmlFor={eventNameId}>Nombre del evento</Label>

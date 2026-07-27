@@ -62,7 +62,11 @@ export function BudgetCalculator() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <ShowInfo show={state.show} onChange={setShowInfo} />
+             <ShowInfo
+                show={state.show}
+                showMembers={state.goal.type === "perMember"}
+                onChange={setShowInfo}
+/>
             </CardContent>
           </Card>
         </section>
@@ -79,7 +83,12 @@ export function BudgetCalculator() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <GoalSelector goal={state.goal} onChange={setGoal} />
+              <GoalSelector
+              goal={state.goal}
+              members={state.show.members}
+              onGoalChange={setGoal}
+              onMembersChange={(members) => setShowInfo({ members })}
+/>
             </CardContent>
           </Card>
         </section>
