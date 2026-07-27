@@ -67,6 +67,23 @@ export function BudgetCalculator() {
           </Card>
         </section>
 
+        <section aria-label="Objetivo económico">
+          <Card>
+            <CardHeader>
+              <CardTitle asChild>
+                <h2>Objetivo económico</h2>
+              </CardTitle>
+              <CardDescription>
+                Cuánto querés que le quede a la banda después de cubrir los
+                gastos.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <GoalSelector goal={state.goal} onChange={setGoal} />
+            </CardContent>
+          </Card>
+        </section>
+
         <section aria-label="Gastos">
           <Card>
             <CardHeader>
@@ -88,22 +105,6 @@ export function BudgetCalculator() {
           </Card>
         </section>
 
-        <section aria-label="Objetivo económico">
-          <Card>
-            <CardHeader>
-              <CardTitle asChild>
-                <h2>Objetivo económico</h2>
-              </CardTitle>
-              <CardDescription>
-                Cuánto querés que le quede a la banda después de cubrir los
-                gastos.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <GoalSelector goal={state.goal} onChange={setGoal} />
-            </CardContent>
-          </Card>
-        </section>
       </div>
 
       <section aria-label="Resumen" className="lg:sticky lg:top-24">
