@@ -98,7 +98,7 @@ export function BudgetCalculator() {
                 <h2>Gastos</h2>
               </CardTitle>
               <CardDescription>
-                Todo lo que hay que pagar para que el show pase.
+                Registra todos los costos asociados a la realización del show.
               </CardDescription>
             </CardHeader>
             <CardContent>
