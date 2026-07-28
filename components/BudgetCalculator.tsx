@@ -59,8 +59,7 @@ export function BudgetCalculator() {
                 <h2>Datos del show</h2>
               </CardTitle>
               <CardDescription>
-                Cuántos son y qué van a tocar. Los integrantes reparten la
-                ganancia.
+                Completa la información general del show para realizar el cálculo.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -78,8 +77,7 @@ export function BudgetCalculator() {
                 <h2>Objetivo económico</h2>
               </CardTitle>
               <CardDescription>
-                Cuánto querés que le quede a la banda después de cubrir los
-                gastos.
+                Define la ganancia que deseas obtener una vez cubiertos todos los costos del show.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -98,7 +96,7 @@ export function BudgetCalculator() {
                 <h2>Gastos</h2>
               </CardTitle>
               <CardDescription>
-                Registra todos los costos asociados a la realización del show.
+                Registra todos los costos asociados al show.
               </CardDescription>
             </CardHeader>
             <CardContent>
