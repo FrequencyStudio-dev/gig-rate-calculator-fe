@@ -21,7 +21,11 @@ export function ShowInfo({
   const membersId = useId()
   const eventNameId = useId()
   const eventTypeId = useId()
-  const [membersTouched, setMembersTouched] = useState(false)
+  const [membersInput, setMembersInput] = useState(
+  show.members === 0 ? "" : String(show.members)
+)
+
+const [membersTouched, setMembersTouched] = useState(false)
   const membersError = membersTouched ? validateMembers(show.members) : null
   return (
     /* Integrantes y Nombre comparten fila en cuanto hay ancho; Tipo va entero. */
@@ -35,12 +39,13 @@ export function ShowInfo({
               inputMode="numeric"
               min={1}
               step={1}
-              value={show.members}
+              value={membersInput}
               aria-invalid={Boolean(membersError)}
               aria-describedby={membersError ? `${membersId}-error` : undefined}
               onBlur={() => setMembersTouched(true)}
               onChange={(e) => {
                 setMembersTouched(true)
+                setMembersInput(e.target.value)
                 onChange({ members: Number(e.target.value) })
               }}
               className="font-mono tabular-nums"
