@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import {  useEffect,  useId, useState } from "react"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -24,6 +24,9 @@ export function ShowInfo({
   const [membersInput, setMembersInput] = useState(
   show.members === 0 ? "" : String(show.members)
 )
+useEffect(() => {
+  setMembersInput(show.members === 0 ? "" : String(show.members))
+}, [show.members])
 
 const [membersTouched, setMembersTouched] = useState(false)
   const membersError = membersTouched ? validateMembers(show.members) : null
