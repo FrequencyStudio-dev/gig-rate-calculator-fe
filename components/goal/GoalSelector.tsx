@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useEffect, useId, useState } from "react"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,18 +10,35 @@ import { validateGoalValue } from "@/features/calculator/validation"
 
 export interface GoalSelectorProps {
   goal: Goal
-  onChange: (patch: Partial<Goal>) => void
+  members: number
+  onGoalChange: (patch: Partial<Goal>) => void
+  onMembersChange: (members: number) => void
 }
 
-export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
+export function GoalSelector({
+  goal,
+  members,
+  onGoalChange,
+  onMembersChange,
+}: GoalSelectorProps) {
   const modeLabelId = useId()
   const modeHelpId = useId()
   const totalId = useId()
   const perMemberId = useId()
   const valueId = useId()
 
+  const [inputValue, setInputValue] = useState(
+    goal.value === 0 ? "" : String(goal.value)
+  )
+
   const [valueTouched, setValueTouched] = useState(false)
-  const valueError = valueTouched ? validateGoalValue(goal.value) : null
+  useEffect(() => {
+  setInputValue(goal.value === 0 ? "" : String(goal.value))
+}, [goal.value])
+
+  const valueError = valueTouched
+    ? validateGoalValue(Number(inputValue))
+    : null
 
   return (
     <div className="flex flex-col gap-4">
@@ -32,11 +49,19 @@ export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
 
         <RadioGroup
           value={goal.type}
-          onValueChange={(value) => onChange({ type: value as GoalType })}
-          aria-labelledby={modeLabelId}
-          aria-describedby={modeHelpId}
-          className="grid-cols-2"
-        >
+            onValueChange={(value) => {
+              const type = value as GoalType
+
+              onGoalChange({ type })
+
+              if (type === "total") {
+                onMembersChange(1)
+              }
+            }}
+            aria-labelledby={modeLabelId}
+            aria-describedby={modeHelpId}
+            className="grid-cols-2"
+          >
           <Label
             htmlFor={totalId}
             className="cursor-pointer rounded-lg border border-input bg-secondary p-4 transition-colors hover:bg-accent/50 has-focus-visible:border-ring has-focus-visible:ring-3 has-focus-visible:ring-ring/50 has-aria-checked:border-primary has-aria-checked:bg-accent has-aria-checked:font-medium has-aria-checked:text-accent-foreground md:p-3"
@@ -62,19 +87,26 @@ export function GoalSelector({ goal, onChange }: GoalSelectorProps) {
 
       <div className="grid gap-2">
         <Label htmlFor={valueId}>Ganancia deseada</Label>
+
         <Input
           id={valueId}
           type="number"
           inputMode="decimal"
           min={0}
           step="0.01"
-          value={goal.value}
+          value={inputValue}
           aria-invalid={Boolean(valueError)}
           aria-describedby={valueError ? `${valueId}-error` : undefined}
-          onBlur={() => setValueTouched(true)}
-          onChange={(e) => onChange({ value: Number(e.target.value) })}
+          onBlur={() => {
+            setValueTouched(true)
+           onGoalChange({ value: Number(inputValue) })
+          }}
+          onChange={(e) => {
+            setInputValue(e.target.value)
+          }}
           className="font-mono tabular-nums"
         />
+
         {valueError ? (
           <p
             id={`${valueId}-error`}

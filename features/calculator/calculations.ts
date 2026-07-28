@@ -26,10 +26,10 @@ export function buildCalculationResult(state: BudgetState): Result {
   const totalCosts = calculateTotalCosts(state.expenses)
   const totalGoal = resolveEconomicGoal(state.goal, state.show.members)
   const recommendedPrice = calculateRecommendedPrice(totalCosts, totalGoal)
-  const profitPerMember = calculateProfitPerMember(
-    totalGoal,
-    state.show.members,
-  )
+  const profitPerMember =
+  state.goal.type === "perMember"
+    ? calculateProfitPerMember(totalGoal, state.show.members)
+    : 0
 
   return { totalCosts, totalGoal, recommendedPrice, profitPerMember }
 }
