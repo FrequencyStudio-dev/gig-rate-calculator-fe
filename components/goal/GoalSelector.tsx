@@ -80,8 +80,7 @@ export function GoalSelector({
         </RadioGroup>
 
         <p id={modeHelpId} className="text-sm text-muted-foreground">
-          Elegí si la ganancia deseada es para toda la banda o para cada
-          integrante.
+            Indica si la ganancia deseada corresponde al total del show o a cada integrante.
         </p>
       </div>
 
