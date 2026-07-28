@@ -17,18 +17,6 @@ export function SummaryCard({
   return (
     <div className="@container flex flex-col gap-4">
       <dl className="grid gap-4 @md:grid-cols-3">
-        <div className="flex flex-col gap-1 @md:col-span-3">
-          <dt className="text-sm font-medium text-muted-foreground">
-            Precio recomendado
-          </dt>
-          <dd
-            aria-live="polite"
-            className="font-mono text-3xl font-semibold tracking-tight text-primary tabular-nums @md:text-4xl"
-          >
-            {formatCurrency(result.recommendedPrice)}
-          </dd>
-        </div>
-
         <div className="flex flex-col gap-1 border-t border-primary/15 pt-4">
           <dt className="text-sm text-muted-foreground">Costo total</dt>
           <dd className="font-mono font-medium tabular-nums">
@@ -53,6 +41,18 @@ export function SummaryCard({
             </dd>
           </div>
         ) : null}
+
+        <div className="flex flex-col gap-1 @md:col-span-3">
+          <dt className="text-sm font-medium text-muted-foreground">
+            Precio recomendado
+          </dt>
+          <dd
+            aria-live="polite"
+            className="font-mono text-3xl font-semibold tracking-tight text-primary tabular-nums @md:text-4xl"
+          >
+            {formatCurrency(result.recommendedPrice)}
+          </dd>
+        </div>
       </dl>
 
       {isIncomplete ? (
