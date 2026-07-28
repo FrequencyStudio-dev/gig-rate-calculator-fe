@@ -68,7 +68,7 @@ const [membersTouched, setMembersTouched] = useState(false)
           id={eventNameId}
           type="text"
           value={show.eventName}
-          placeholder="Show en La Trastienda"
+          placeholder=""
           onChange={(e) => onChange({ eventName: e.target.value })}
         />
       </div>
@@ -79,7 +79,7 @@ const [membersTouched, setMembersTouched] = useState(false)
           id={eventTypeId}
           type="text"
           value={show.eventType}
-          placeholder="Concierto, festival, casamiento…"
+          placeholder="Concierto, festival, show privado…"
           onChange={(e) => onChange({ eventType: e.target.value })}
         />
       </div>
