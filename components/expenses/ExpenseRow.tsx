@@ -5,6 +5,7 @@ import { CheckIcon, PencilIcon, Trash2Icon, XIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import { SelectNative } from "@/components/ui/select-native"
 import { EXPENSE_CATEGORIES } from "@/features/calculator/constants"
 import type { Expense, ExpenseCategory } from "@/features/calculator/types"
@@ -59,7 +60,6 @@ export function ExpenseRow({
     )?.label ?? expense.category
 
   const startEditing = () => {
-     console.log("EDITANDO", expense.id)
     setDraft({
       category: expense.category,
       description: expense.description,
@@ -102,7 +102,6 @@ export function ExpenseRow({
 
       return
     }
-    console.log("GUARDANDO", draft)
 
     onUpdate(expense.id, draft)
     setIsEditing(false)
@@ -114,6 +113,8 @@ export function ExpenseRow({
       data-testid="expense-row"
       className="grid gap-3 rounded-lg border border-border/70 bg-background p-3">
         <div className="grid gap-2">
+          <Label htmlFor={categoryId}>Categoría</Label>
+
           <SelectNative
             id={categoryId}
             value={draft.category}
@@ -134,11 +135,16 @@ export function ExpenseRow({
 
         <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
           <div className="grid gap-2">
+            <Label htmlFor={descriptionId}>Concepto</Label>
+
             <Input
               id={descriptionId}
               value={draft.description}
               placeholder="Sonido, traslado, viáticos…"
               aria-invalid={Boolean(descriptionError)}
+              aria-describedby={
+                descriptionError ? `${descriptionId}-error` : undefined
+              }
               onBlur={() =>
                 setTouched((prev) => ({
                   ...prev,
@@ -154,57 +160,76 @@ export function ExpenseRow({
             />
 
             {descriptionError ? (
-              <p className="text-sm text-destructive">
+              <p
+                id={`${descriptionId}-error`}
+                role="alert"
+                className="text-sm text-destructive"
+              >
                 {descriptionError}
               </p>
             ) : null}
           </div>
 
-          <div className="flex items-start gap-2">
-            <Input
-              id={amountId}
-              type="number"
-              inputMode="decimal"
-              min={0}
-              step="0.01"
-              value={draft.amount}
-              aria-invalid={Boolean(amountError)}
-              onBlur={() =>
-                setTouched((prev) => ({
-                  ...prev,
-                  amount: true,
-                }))
-              }
-              onChange={(e) =>
-                setDraft((prev) => ({
-                  ...prev,
-                  amount: Number(e.target.value),
-                }))
-              }
-              className="text-right font-mono tabular-nums sm:w-36"
-            />
+          <div className="grid gap-2">
+            <Label htmlFor={amountId}>Importe</Label>
 
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label="Guardar cambios"
-              title="Guardar cambios"
-              onClick={saveChanges}
-            >
-              <CheckIcon />
-            </Button>
+            <div className="flex items-start gap-2">
+              <Input
+                id={amountId}
+                type="number"
+                inputMode="decimal"
+                min={0}
+                step="0.01"
+                value={draft.amount}
+                aria-invalid={Boolean(amountError)}
+                aria-describedby={amountError ? `${amountId}-error` : undefined}
+                onBlur={() =>
+                  setTouched((prev) => ({
+                    ...prev,
+                    amount: true,
+                  }))
+                }
+                onChange={(e) =>
+                  setDraft((prev) => ({
+                    ...prev,
+                    amount: Number(e.target.value),
+                  }))
+                }
+                className="text-right font-mono tabular-nums sm:w-36"
+              />
 
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              aria-label="Cancelar"
-              title="Cancelar"
-              onClick={cancelEditing}
-            >
-              <XIcon />
-            </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Guardar cambios"
+                title="Guardar cambios"
+                onClick={saveChanges}
+              >
+                <CheckIcon />
+              </Button>
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                aria-label="Cancelar"
+                title="Cancelar"
+                onClick={cancelEditing}
+              >
+                <XIcon />
+              </Button>
+            </div>
+
+            {amountError ? (
+              <p
+                id={`${amountId}-error`}
+                role="alert"
+                className="text-sm text-destructive"
+              >
+                {amountError}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

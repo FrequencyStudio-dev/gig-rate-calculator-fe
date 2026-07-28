@@ -37,6 +37,9 @@ describe("BudgetCalculator", () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
+    /* El campo Integrantes solo existe en modo "Por integrante". */
+    await user.click(screen.getByLabelText("Por integrante"))
+
     await fillNumber(user, screen.getByLabelText("Integrantes"), "4")
     await user.type(screen.getByLabelText("Nombre del evento"), "Show en Sala")
     await user.type(screen.getByLabelText("Tipo de evento"), "Concierto")
@@ -51,13 +54,16 @@ describe("BudgetCalculator", () => {
     await user.type(screen.getByLabelText("Concepto"), "Sonido")
     await fillNumber(user, screen.getByLabelText("Importe"), "300")
 
-    await user.click(screen.getByLabelText("Por integrante"))
+    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
+
     await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "100")
 
     expect(expensesSubtotal()).toBe(`Costo total: ${formatCurrency(500)}`)
     expect(summaryValue("Costo total")).toBe(formatCurrency(500))
     expect(summaryValue("Ganancia objetivo")).toBe(formatCurrency(400))
-    expect(summaryValue("Precio recomendado")).toBe(formatCurrency(900))
+    expect(summaryValue("Precio recomendado del show")).toBe(
+      formatCurrency(900),
+    )
     expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(100))
   })
 
@@ -85,49 +91,44 @@ describe("BudgetCalculator", () => {
     expect(expensesSubtotal()).toBe(
       `Costo total: ${formatCurrency(500)}`
     )
-      // Editar primer gasto
-      await user.click(
-        expenseItem(0).getByRole("button", { name: "Editar" }),
+    // Editar primer gasto
+    await user.click(
+      expenseItem(0).getByRole("button", { name: "Editar" }),
+    )
+
+    const concepto = expenseItem(0).getByLabelText("Concepto")
+    const importe = expenseItem(0).getByLabelText("Importe")
+
+    await user.clear(concepto)
+    await user.type(concepto, "Combustible")
+
+    await user.clear(importe)
+    await user.type(importe, "250")
+
+    expect(importe).toHaveValue(250)
+
+    await user.click(
+      expenseItem(0).getByRole("button", { name: "Guardar cambios" }),
+    )
+
+    await waitFor(() => {
+      expect(expensesSubtotal()).toBe(
+        `Costo total: ${formatCurrency(550)}`
       )
+    })
 
-      console.log(screen.getAllByLabelText("Concepto").length)
-      console.log(screen.getAllByLabelText("Importe").length)
+    // Eliminar primer gasto
+    await user.click(
+      expenseItem(0).getByRole("button", { name: "Eliminar" }),
+    )
 
-      const concepto = screen.getByLabelText("Concepto")
-      const importe = screen.getByLabelText("Importe")
+    expect(expensesSubtotal()).toBe(
+      `Costo total: ${formatCurrency(300)}`
+    )
 
-      await user.clear(concepto)
-      await user.type(concepto, "Combustible")
-
-      await user.clear(importe)
-      await user.type(importe, "250")
-
-      expect(importe).toHaveValue(250)
-
-      await user.click(
-        screen.getByRole("button", { name: "Guardar cambios" }),
-      )
-
-      screen.debug()
-
-      await waitFor(() => {
-        expect(expensesSubtotal()).toBe(
-          `Costo total: ${formatCurrency(550)}`
-        )
-      })
-
-        // Eliminar primer gasto
-        await user.click(
-          expenseItem(0).getByRole("button", { name: "Eliminar" }),
-        )
-
-        expect(expensesSubtotal()).toBe(
-          `Costo total: ${formatCurrency(300)}`
-        )
-
-        expect(summaryValue("Costo total"))
-          .toBe(formatCurrency(300))
-      })
+    expect(summaryValue("Costo total"))
+      .toBe(formatCurrency(300))
+  })
 
 
   it("alterna el modo de ganancia entre total y por integrante", async () => {
