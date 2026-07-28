@@ -129,6 +129,7 @@ export function BudgetCalculator() {
           <CardContent>
             <SummaryCard
               result={result}
+              goalType={state.goal.type}
               isIncomplete={hasIncompleteData(state)}
             />
           </CardContent>

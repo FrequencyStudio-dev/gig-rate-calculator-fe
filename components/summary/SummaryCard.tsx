@@ -1,14 +1,19 @@
 import { TriangleAlertIcon } from "lucide-react"
 
-import type { Result } from "@/features/calculator/types"
+import type { GoalType, Result } from "@/features/calculator/types"
 import { formatCurrency } from "@/lib/currency"
 
 export interface SummaryCardProps {
   result: Result
+  goalType: GoalType
   isIncomplete: boolean
 }
 
-export function SummaryCard({ result, isIncomplete }: SummaryCardProps) {
+export function SummaryCard({
+  result,
+  goalType,
+  isIncomplete,
+}: SummaryCardProps) {
   return (
     <div className="@container flex flex-col gap-4">
       <dl className="grid gap-4 @md:grid-cols-3">
@@ -38,14 +43,16 @@ export function SummaryCard({ result, isIncomplete }: SummaryCardProps) {
           </dd>
         </div>
 
-        <div className="flex flex-col gap-1 border-t border-primary/15 pt-4">
-          <dt className="text-sm text-muted-foreground">
-            Ganancia por integrante
-          </dt>
-          <dd className="font-mono font-medium tabular-nums">
-            {formatCurrency(result.profitPerMember)}
-          </dd>
-        </div>
+        {goalType === "perMember" ? (
+          <div className="flex flex-col gap-1 border-t border-primary/15 pt-4">
+            <dt className="text-sm text-muted-foreground">
+              Ganancia por integrante
+            </dt>
+            <dd className="font-mono font-medium tabular-nums">
+              {formatCurrency(result.profitPerMember)}
+            </dd>
+          </div>
+        ) : null}
       </dl>
 
       {isIncomplete ? (
