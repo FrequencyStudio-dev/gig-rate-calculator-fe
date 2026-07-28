@@ -1,6 +1,6 @@
 "use client"
 
-import { useId, useState } from "react"
+import { useEffect, useId, useState } from "react"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -32,6 +32,9 @@ export function GoalSelector({
   )
 
   const [valueTouched, setValueTouched] = useState(false)
+  useEffect(() => {
+  setInputValue(goal.value === 0 ? "" : String(goal.value))
+}, [goal.value])
 
   const valueError = valueTouched
     ? validateGoalValue(Number(inputValue))

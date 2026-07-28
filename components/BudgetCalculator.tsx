@@ -5,6 +5,7 @@
 import { ExpenseManager } from "@/components/expenses/ExpenseManager"
 import { GoalSelector } from "@/components/goal/GoalSelector"
 import { ShowInfo } from "@/components/show-info/ShowInfo"
+import { Button } from "@/components/ui/button"
 import { SummaryCard } from "@/components/summary/SummaryCard"
 import {
   Card,
@@ -43,6 +44,7 @@ export function BudgetCalculator() {
     updateExpense,
     removeExpense,
     setGoal,
+    resetBudget,
   } = useBudget()
 
   const result = buildCalculationResult(state)
@@ -65,12 +67,10 @@ export function BudgetCalculator() {
              <ShowInfo
                 show={state.show}
                 showMembers={state.goal.type === "perMember"}
-                onChange={setShowInfo}
-/>
+                onChange={setShowInfo}/>
             </CardContent>
           </Card>
         </section>
-
         <section aria-label="Objetivo económico">
           <Card>
             <CardHeader>
@@ -87,12 +87,10 @@ export function BudgetCalculator() {
               goal={state.goal}
               members={state.show.members}
               onGoalChange={setGoal}
-              onMembersChange={(members) => setShowInfo({ members })}
-/>
+              onMembersChange={(members) => setShowInfo({ members })}/>
             </CardContent>
           </Card>
         </section>
-
         <section aria-label="Gastos">
           <Card>
             <CardHeader>
@@ -113,9 +111,7 @@ export function BudgetCalculator() {
             </CardContent>
           </Card>
         </section>
-
       </div>
-
       <section aria-label="Resumen" className="lg:sticky lg:top-24">
         <Card className="bg-primary/5 ring-primary/20">
           <CardHeader>
@@ -131,9 +127,16 @@ export function BudgetCalculator() {
               result={result}
               goalType={state.goal.type}
               isIncomplete={hasIncompleteData(state)}
-            />
+            />           
           </CardContent>
         </Card>
+        <Button
+          type="button"
+          onClick={resetBudget}
+          className="mt-4 px-4 py-2"
+        >
+          Nuevo presupuesto
+        </Button>
       </section>
     </div>
   )

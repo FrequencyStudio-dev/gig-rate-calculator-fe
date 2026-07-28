@@ -28,6 +28,7 @@ export interface UseBudget {
   updateExpense: (id: string, patch: Partial<Omit<Expense, "id">>) => void
   removeExpense: (id: string) => void
   setGoal: (patch: Partial<Goal>) => void
+  resetBudget: () => void
 }
 
 export function useBudget(): UseBudget {
@@ -66,6 +67,9 @@ export function useBudget(): UseBudget {
   const setGoal = useCallback((patch: Partial<Goal>) => {
     setState((prev) => ({ ...prev, goal: { ...prev.goal, ...patch } }))
   }, [])
+  const resetBudget = useCallback(() => {
+  setState(INITIAL_STATE)
+}, [])
 
   return {
     state,
@@ -74,5 +78,6 @@ export function useBudget(): UseBudget {
     updateExpense,
     removeExpense,
     setGoal,
+    resetBudget
   }
 }
