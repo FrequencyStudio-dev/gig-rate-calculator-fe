@@ -44,7 +44,7 @@ export function SummaryCard({
 
         <div className="flex flex-col gap-1 @md:col-span-3">
           <dt className="text-sm font-medium text-muted-foreground">
-            Precio recomendado
+            Precio recomendado del show
           </dt>
           <dd
             aria-live="polite"
