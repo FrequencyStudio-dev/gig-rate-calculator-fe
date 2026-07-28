@@ -167,7 +167,6 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
             }
             className="text-right font-mono tabular-nums sm:w-36"
           />
-          
           {amountError ? (
             <p
               id={`${amountId}-error`}
@@ -179,7 +178,6 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
           ) : null}
         </div>
       </div>
-
       <Button type="button" onClick={handleAdd}>
         Agregar gasto
       </Button>

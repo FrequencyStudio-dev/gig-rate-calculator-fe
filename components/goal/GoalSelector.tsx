@@ -98,10 +98,12 @@ export function GoalSelector({
           aria-describedby={valueError ? `${valueId}-error` : undefined}
           onBlur={() => {
             setValueTouched(true)
-           onGoalChange({ value: Number(inputValue) })
           }}
           onChange={(e) => {
-            setInputValue(e.target.value)
+            const value = e.target.value
+
+            setInputValue(value)
+            onGoalChange({ value: Number(value) })
           }}
           className="font-mono tabular-nums"
         />

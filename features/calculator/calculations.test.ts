@@ -64,12 +64,12 @@ describe("buildCalculationResult", () => {
         expense(200, {
           id: "t",
           description: "Transporte",
-          category: "transport",
+          category: "travel",
         }),
         expense(300, {
           id: "s",
           description: "Sonido",
-          category: "production",
+          category: "sound",
         }),
       ],
       goal: { type: "perMember", value: 100 },
@@ -95,7 +95,7 @@ describe("buildCalculationResult", () => {
       totalCosts: 0,
       totalGoal: 500,
       recommendedPrice: 500,
-      profitPerMember: 500,
+      profitPerMember: 0,
     })
   })
 

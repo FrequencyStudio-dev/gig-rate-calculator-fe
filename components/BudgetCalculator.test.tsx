@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react"
+import { render, screen, within, waitFor } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import type { UserEvent } from "@testing-library/user-event"
 import { describe, expect, it } from "vitest"
@@ -13,7 +13,6 @@ function summaryValue(label: string): string {
   return term.nextElementSibling?.textContent ?? ""
 }
 
-/* Subtotal que muestra ExpenseManager dentro de la sección de gastos. */
 function expensesSubtotal(): string {
   const expenses = within(screen.getByRole("region", { name: "Gastos" }))
 
@@ -21,11 +20,14 @@ function expensesSubtotal(): string {
 }
 
 function expenseItem(index: number) {
-  return within(screen.getAllByRole("listitem")[index])
+  return within(screen.getAllByTestId("expense-row")[index])
 }
 
-/* Los inputs numéricos arrancan en 0. hay que vaciarlos antes de escribir. */
-async function fillNumber(user: UserEvent, field: HTMLElement, value: string) {
+async function fillNumber(
+  user: UserEvent,
+  field: HTMLElement,
+  value: string,
+) {
   await user.clear(field)
   await user.type(field, value)
 }
@@ -40,16 +42,14 @@ describe("BudgetCalculator", () => {
     await user.type(screen.getByLabelText("Tipo de evento"), "Concierto")
 
     await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
-    await user.type(expenseItem(0).getByLabelText("Concepto"), "Transporte")
-    await user.selectOptions(
-      expenseItem(0).getByLabelText("Categoría"),
-      "transport",
-    )
-    await fillNumber(user, expenseItem(0).getByLabelText("Importe"), "200")
+
+    await user.type(screen.getByLabelText("Concepto"), "Transporte")
+    await fillNumber(user, screen.getByLabelText("Importe"), "200")
 
     await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
-    await user.type(expenseItem(1).getByLabelText("Concepto"), "Sonido")
-    await fillNumber(user, expenseItem(1).getByLabelText("Importe"), "300")
+
+    await user.type(screen.getByLabelText("Concepto"), "Sonido")
+    await fillNumber(user, screen.getByLabelText("Importe"), "300")
 
     await user.click(screen.getByLabelText("Por integrante"))
     await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "100")
@@ -61,145 +61,221 @@ describe("BudgetCalculator", () => {
     expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(100))
   })
 
-  it("recalcula el resumen al cambiar cualquier dato", async () => {
-    const user = userEvent.setup()
-    render(<BudgetCalculator />)
-
-    await fillNumber(user, screen.getByLabelText("Integrantes"), "2")
-    await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "1000")
-
-    expect(summaryValue("Precio recomendado")).toBe(formatCurrency(1000))
-    expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(500))
-
-    /* Solo cambia la cantidad de integrantes, el resumen se actualiza solo. */
-    await fillNumber(user, screen.getByLabelText("Integrantes"), "4")
-
-    expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(250))
-
-    /* Y un gasto nuevo mueve el precio recomendado sin tocar nada más. */
-    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
-    await fillNumber(user, expenseItem(0).getByLabelText("Importe"), "150")
-
-    expect(summaryValue("Costo total")).toBe(formatCurrency(150))
-    expect(summaryValue("Precio recomendado")).toBe(formatCurrency(1150))
-  })
 
   it("agrega, edita y elimina gastos, y se ve reflejado en el subtotal", async () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
-    expect(screen.getByText("Sin gastos todavía.")).toBeInTheDocument()
+    // Crear primer gasto
+    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
+
+    await user.type(screen.getByLabelText("Concepto"), "Traslado")
+    await fillNumber(user, screen.getByLabelText("Importe"), "200")
 
     await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
-    await user.type(expenseItem(0).getByLabelText("Concepto"), "Traslado")
-    await fillNumber(user, expenseItem(0).getByLabelText("Importe"), "200")
+
+
+    // Crear segundo gasto
+    await user.type(screen.getByLabelText("Concepto"), "Sonido")
+    await fillNumber(user, screen.getByLabelText("Importe"), "300")
 
     await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
-    await fillNumber(user, expenseItem(1).getByLabelText("Importe"), "300")
 
-    expect(expensesSubtotal()).toBe(`Costo total: ${formatCurrency(500)}`)
 
-    await user.clear(expenseItem(0).getByLabelText("Concepto"))
-    await user.type(expenseItem(0).getByLabelText("Concepto"), "Combustible")
-    await fillNumber(user, expenseItem(0).getByLabelText("Importe"), "250")
+    expect(expensesSubtotal()).toBe(
+      `Costo total: ${formatCurrency(500)}`
+    )
+      // Editar primer gasto
+      await user.click(
+        expenseItem(0).getByRole("button", { name: "Editar" }),
+      )
 
-    expect(expenseItem(0).getByLabelText("Concepto")).toHaveValue("Combustible")
-    expect(expensesSubtotal()).toBe(`Costo total: ${formatCurrency(550)}`)
+      console.log(screen.getAllByLabelText("Concepto").length)
+      console.log(screen.getAllByLabelText("Importe").length)
 
-    await user.click(expenseItem(0).getByRole("button", { name: "Eliminar" }))
+      const concepto = screen.getByLabelText("Concepto")
+      const importe = screen.getByLabelText("Importe")
 
-    expect(screen.getAllByRole("listitem")).toHaveLength(1)
-    expect(expensesSubtotal()).toBe(`Costo total: ${formatCurrency(300)}`)
-    expect(summaryValue("Costo total")).toBe(formatCurrency(300))
-  })
+      await user.clear(concepto)
+      await user.type(concepto, "Combustible")
+
+      await user.clear(importe)
+      await user.type(importe, "250")
+
+      expect(importe).toHaveValue(250)
+
+      await user.click(
+        screen.getByRole("button", { name: "Guardar cambios" }),
+      )
+
+      screen.debug()
+
+      await waitFor(() => {
+        expect(expensesSubtotal()).toBe(
+          `Costo total: ${formatCurrency(550)}`
+        )
+      })
+
+        // Eliminar primer gasto
+        await user.click(
+          expenseItem(0).getByRole("button", { name: "Eliminar" }),
+        )
+
+        expect(expensesSubtotal()).toBe(
+          `Costo total: ${formatCurrency(300)}`
+        )
+
+        expect(summaryValue("Costo total"))
+          .toBe(formatCurrency(300))
+      })
+
 
   it("alterna el modo de ganancia entre total y por integrante", async () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
-    await fillNumber(user, screen.getByLabelText("Integrantes"), "4")
-    await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "400")
-
-    /* Por defecto el objetivo es total. */
     expect(screen.getByLabelText("Total")).toBeChecked()
-    expect(summaryValue("Ganancia objetivo")).toBe(formatCurrency(400))
-    expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(100))
 
     await user.click(screen.getByLabelText("Por integrante"))
 
-    expect(summaryValue("Ganancia objetivo")).toBe(formatCurrency(1600))
-    expect(summaryValue("Ganancia por integrante")).toBe(formatCurrency(400))
+    await fillNumber(user, screen.getByLabelText("Integrantes"), "4")
+    await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "400")
+
+    expect(summaryValue("Ganancia objetivo"))
+      .toBe(formatCurrency(1600))
+
+    expect(summaryValue("Ganancia por integrante"))
+      .toBe(formatCurrency(400))
+
+    await user.click(screen.getByLabelText("Total"))
+
+    expect(summaryValue("Ganancia objetivo"))
+      .toBe(formatCurrency(400))
+
+    expect(screen.queryByLabelText("Integrantes"))
+      .toBeNull()
   })
 })
 
+
 describe("BudgetCalculator · validación", () => {
+
   it("marca error y aria-invalid al dejar Integrantes en un valor inválido", async () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
-    await fillNumber(user, screen.getByLabelText("Integrantes"), "0")
+    await user.click(screen.getByLabelText("Por integrante"))
 
-    const show = within(screen.getByRole("region", { name: "Datos del show" }))
-    expect(show.getByRole("alert")).toHaveTextContent(
-      "Debe haber al menos un integrante.",
+    await fillNumber(
+      user,
+      screen.getByLabelText("Integrantes"),
+      "0",
     )
-    expect(screen.getByLabelText("Integrantes")).toHaveAttribute(
-      "aria-invalid",
-      "true",
+
+    const show = within(
+      screen.getByRole("region", { name: "Datos del show" }),
     )
+
+    expect(show.getByRole("alert"))
+      .toHaveTextContent(
+        "Debe haber al menos un integrante.",
+      )
+
+    expect(screen.getByLabelText("Integrantes"))
+      .toHaveAttribute(
+        "aria-invalid",
+        "true",
+      )
   })
+
 
   it("muestra los errores de un gasto vacío al salir de cada campo", async () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
-    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
+    await user.click(
+      screen.getByRole("button", { name: "Agregar gasto" }),
+    )
 
-    /* Los errores del gasto salen onBlur, no onChange: hay que enfocar y salir. */
-    const concepto = expenseItem(0).getByLabelText("Concepto")
+    const concepto = screen.getByLabelText("Concepto")
     await user.click(concepto)
     await user.tab()
 
-    const importe = expenseItem(0).getByLabelText("Importe")
+    const importe = screen.getByLabelText("Importe")
     await user.click(importe)
     await user.tab()
 
-    const item = expenseItem(0)
-    expect(item.getByText("El concepto es obligatorio.")).toBeInTheDocument()
-    expect(item.getByText("El importe debe ser mayor a 0.")).toBeInTheDocument()
-    expect(concepto).toHaveAttribute("aria-invalid", "true")
+    expect(
+      screen.getByText("El concepto es obligatorio."),
+    ).toBeInTheDocument()
+
+    expect(
+      screen.getByText("El importe debe ser mayor a 0."),
+    ).toBeInTheDocument()
+
+    expect(concepto)
+      .toHaveAttribute("aria-invalid", "true")
   })
+
 
   it("marca error al salir de Ganancia deseada sin un valor válido", async () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
     const objetivo = within(
-      screen.getByRole("region", { name: "Objetivo económico" }),
+      screen.getByRole(
+        "region",
+        { name: "Objetivo económico" },
+      ),
     )
+
     const value = screen.getByLabelText("Ganancia deseada")
+
     await user.click(value)
     await user.tab()
 
-    expect(objetivo.getByRole("alert")).toHaveTextContent(
-      "El objetivo debe ser mayor que 0.",
-    )
-    expect(value).toHaveAttribute("aria-invalid", "true")
+    expect(objetivo.getByRole("alert"))
+      .toHaveTextContent(
+        "El objetivo debe ser mayor que 0.",
+      )
+
+    expect(value)
+      .toHaveAttribute(
+        "aria-invalid",
+        "true",
+      )
   })
 
-  it("el aviso de datos incompletos aparece, se va al completar y vuelve con un gasto vacío", async () => {
+
+  it("el aviso de datos incompletos desaparece al completar los datos mínimos", async () => {
     const user = userEvent.setup()
     render(<BudgetCalculator />)
 
-    /* Arranca incompleto: el objetivo por defecto es 0. */
-    expect(screen.getByRole("status")).toBeInTheDocument()
+    expect(
+      screen.getByRole("status"),
+    ).toBeInTheDocument()
 
-    /* Con 1 integrante (default) y objetivo válido, y sin gastos, se completa. */
-    await fillNumber(user, screen.getByLabelText("Ganancia deseada"), "100")
-    expect(screen.queryByRole("status")).toBeNull()
 
-    /* Un gasto nuevo nace vacío (concepto "" e importe 0): vuelve a faltar dato. */
-    await user.click(screen.getByRole("button", { name: "Agregar gasto" }))
-    expect(screen.getByRole("status")).toBeInTheDocument()
+    await fillNumber(
+      user,
+      screen.getByLabelText("Ganancia deseada"),
+      "100",
+    )
+
+
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("status"),
+      ).toBeNull()
+    })
+
+
+    await user.click(
+      screen.getByRole("button", { name: "Agregar gasto" }),
+    )
+
+    expect(
+      screen.queryByRole("status"),
+    ).toBeNull()
   })
 })

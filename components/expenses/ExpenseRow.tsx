@@ -59,6 +59,7 @@ export function ExpenseRow({
     )?.label ?? expense.category
 
   const startEditing = () => {
+     console.log("EDITANDO", expense.id)
     setDraft({
       category: expense.category,
       description: expense.description,
@@ -101,6 +102,7 @@ export function ExpenseRow({
 
       return
     }
+    console.log("GUARDANDO", draft)
 
     onUpdate(expense.id, draft)
     setIsEditing(false)
@@ -108,7 +110,9 @@ export function ExpenseRow({
 
   if (isEditing) {
     return (
-      <div className="grid gap-3 rounded-lg border border-border/70 bg-background p-3">
+      <div
+      data-testid="expense-row"
+      className="grid gap-3 rounded-lg border border-border/70 bg-background p-3">
         <div className="grid gap-2">
           <SelectNative
             id={categoryId}
@@ -206,49 +210,51 @@ export function ExpenseRow({
       </div>
     )
   }
-
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-border py-3">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{categoryLabel}</span>
+  <div
+    data-testid="expense-row"
+    className="flex items-center justify-between gap-4 border-b border-border py-3"
+  >
+    <div className="min-w-0 flex-1">
+      <div className="flex items-center gap-2">
+        <span className="font-medium">{categoryLabel}</span>
 
-          <span className="text-muted-foreground">•</span>
+        <span className="text-muted-foreground">•</span>
 
-          <span className="truncate text-muted-foreground">
-            {expense.description}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-3">
-        <span className="font-mono tabular-nums font-medium">
-          {formatCurrency(expense.amount)}
+        <span className="truncate text-muted-foreground">
+          {expense.description}
         </span>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label="Editar"
-          title="Editar"
-          onClick={startEditing}
-        >
-          <PencilIcon />
-        </Button>
-
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label="Eliminar"
-          title="Eliminar"
-          onClick={() => onRemove(expense.id)}
-          className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-        >
-          <Trash2Icon />
-        </Button>
       </div>
     </div>
+
+    <div className="flex items-center gap-3">
+      <span className="font-mono tabular-nums font-medium">
+        {formatCurrency(expense.amount)}
+      </span>
+
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label="Editar"
+        title="Editar"
+        onClick={startEditing}
+      >
+        <PencilIcon />
+      </Button>
+
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        aria-label="Eliminar"
+        title="Eliminar"
+        onClick={() => onRemove(expense.id)}
+        className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+      >
+        <Trash2Icon />
+      </Button>
+    </div>
+  </div>
   )
 }
