@@ -118,9 +118,6 @@ export function BudgetCalculator() {
             <CardTitle asChild>
               <h2>Resumen</h2>
             </CardTitle>
-            <CardDescription>
-              Esto es lo que tenés que cobrar por el show.
-            </CardDescription>
           </CardHeader>
           <CardContent>
             <SummaryCard
