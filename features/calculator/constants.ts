@@ -2,10 +2,12 @@ import type { ExpenseCategory, ExpenseCategoryOption, GoalType } from "./types"
 
 /* Categorías fijas del gasto, en orden de aparición en la UI. */
 export const EXPENSE_CATEGORIES: ExpenseCategoryOption[] = [
-  { value: "transport", label: "Transporte" },
+  { value: "travel", label: "Traslado y viáticos" },
   { value: "equipment", label: "Equipamiento" },
-  { value: "production", label: "Producción" },
+  { value: "sound", label: "Sonido y técnica" },
   { value: "staff", label: "Personal" },
+  { value: "lodging", label: "Alojamiento" },
+  { value: "commission", label: "Comisiones" },
   { value: "other", label: "Otros" },
 ]
 

@@ -1,8 +1,8 @@
 /* Fuente única de tipos del dominio */
 
 export type ExpenseCategory =
-  "transport" | "equipment" | "production" | "staff" | "other"
-
+  "travel" | "equipment" | "sound" | "staff" | "lodging" | "commission" | "other"
+  
 export type GoalType = "total" | "perMember"
 
 /** Datos del show. Entidad raíz del cálculo. */
