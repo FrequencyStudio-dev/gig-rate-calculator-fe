@@ -66,7 +66,7 @@ export function ExpenseForm({ onAdd }: ExpenseFormProps) {
 
     onAdd({
       category: form.category,
-      description: form.category,
+      description: form.description,
       amount: Number(form.amount),
     })
 
