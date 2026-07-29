@@ -50,6 +50,16 @@ export function BudgetCalculator() {
   const result = buildCalculationResult(state)
 
   return (
+
+    <div className="space-y-8">
+    <header className="space-y-2">
+      <h1 className="text-3xl font-bold tracking-tight">
+        Calculadora de Caché
+      </h1>
+      <p className="text-muted-foreground">
+        Calculá cuánto cobrar por tu próximo show.
+      </p>
+    </header>
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-8">
       <div className="flex flex-col gap-6">
         <section aria-label="Datos del show">
@@ -133,6 +143,7 @@ export function BudgetCalculator() {
           Nuevo presupuesto
         </Button>
       </section>
+    </div>
     </div>
   )
 }

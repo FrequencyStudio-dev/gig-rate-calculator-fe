@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "Gig Rate Calculator",
-  description: "Calculadora de precio de show para bandas — Frequency Studio.",
+  title: "Calculador de Caché",
+  description: "Calculadora de caché para músicos y bandas — Frequency Studio.",
 }
 
 export const viewport: Viewport = {
@@ -56,7 +56,7 @@ export default function RootLayout({
                 Frequency Studio
               </span>
               <h1 className="font-heading leading-tight font-semibold">
-                Gig Rate Calculator
+                Calculadora de Caché
               </h1>
             </div>
           </div>
